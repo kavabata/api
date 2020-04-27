@@ -1,4 +1,4 @@
-
+const config = require('./config');
 let mysql = require('mysql');
 let _db;
 
@@ -8,18 +8,15 @@ const initDb = (callback) => {
       return callback(null, _db);
   }
 
-  let db = mysql.createConnection({
-    host     : '192.168.1.149',
-    user     : 'pi',
-    password : '123456',
-    database : 'sensors'
-  });
+  let db = mysql.createConnection(config.db);
   
   db.connect((err) =>{
     if (err) {
         return callback(err);
     }
+    
     console.log("DB initialized - connected to: PI");
+
     _db = db;
     return callback(null, _db);
   });
