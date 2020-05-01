@@ -1,6 +1,6 @@
 
 module.exports = {
-  sensorTrigger: async ({ sensorId, roomId, value }) => {
+  sensorTrigger: async ({ sensorId }) => {
 
     // const sensorsState = await require('../models/sensors').getSensorsState(roomId);
     // console.log(sensorsState);
@@ -9,30 +9,65 @@ module.exports = {
     // console.log(scenarios);
     // console.log(sensorId);
   
-    let actions = [];
     const touchedControllers = scenarios
       .filter(({ sensor_id }) => sensor_id == sensorId)
-      .map(({ controller_id, device_id, type }) => ({ controllerId: controller_id, deviceId: device_id, controller: type }));
+      .map(({
+        controller_id,
+        device_id,
+        controller,
+        controller_default,
+        controller_value,
+        controller_delay,
+        
+        controllerState,
+        controllerStateUpdated,
+        controllerDelayed
+      }) => ({
+        controllerId: controller_id,
+        deviceId: device_id,
+        controller,
+        controllerDefault: controller_default,
+        controllerValue: controller_value,
+        controllerDelay: controller_delay,
+        controllerState,
+        controllerStateUpdated,
+        controllerDelayed
+      }));
     
     // console.log(touchedControllers);
 
-    touchedControllers.forEach(({ controllerId, deviceId, controller }) => {
+    touchedControllers.forEach(({ 
+      controllerId, 
+      deviceId, 
+      controller, 
+      controllerDefault, 
+      controllerValue, 
+      controllerState,
+      controllerStateUpdated,
+      controllerDelayed
+    }) => {
       const controllerList = scenarios
         .filter(({ controller_id }) => controller_id == controllerId )
       
       // console.log(controllerList);
       
       if (controllerList.every(({ checked }) => checked)) {
-        const action = controllerList.reduce((acc, { controller_value }) => controller_value, 0);
+        console.log('Every scenario is true');
+        // console.log('controllerDelayed: ', controllerDelayed)
 
-        // console.log('console.log(callAction);');
-        // console.log(deviceId);
-        // console.log(controller);
-        // console.log(action);
+        if (controllerState != controllerValue) {
+          require('./call').fireCallToDevice({ deviceId, controller, action: controllerValue});
+        } else {
+          require('../models/controllers').updateControllerState({ controllerId });
+        }
+      } else {
+        console.log('Not Every scenario is true');
+        console.log('controllerDelayed: ', controllerDelayed)
 
-        require('./call').fireCallToDevice({ deviceId, controller, action});
+        if (!controllerDelayed && controllerState != controllerDefault) {
+          require('./call').fireCallToDevice({ deviceId, controller, action: controllerDefault});
+        }
       }
-
     });
   }
 };

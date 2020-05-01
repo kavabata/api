@@ -6,12 +6,15 @@ module.exports = {
     
     let query = `
       SELECT 
-        s.*, 
+        s.*,
         st.value,
-        ct.state,
-        c.type,
+        ct.state as controllerState,
+        ct.updated as controllerStateUpdated,
+        date_add(ct.updated, interval s.controller_delay second) > NOW() as controllerDelayed,
+        c.controller,
         c.name,
         c.device_id,
+        c.controller_default,
         st.value BETWEEN s.sensor_start AND s.sensor_end AS checked
       FROM scenarios s
       LEFT JOIN sensors_states st ON st.sensor_id = s.sensor_id
