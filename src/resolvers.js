@@ -1,9 +1,9 @@
 
 var dht = require('./models/dht');
 var device = require('./models/device');
-var pir = require('./models/pir');
-var light = require('./models/light');
-var switchstate = require('./models/switch');
+
+var sensors = require('./models/sensors');
+var controllers = require('./models/controllers');
 
 // const getDb = require("./db").getDb;
 
@@ -14,11 +14,17 @@ const resolvers = {
     return '36.6';
   },
   getDht: async ({ dateStart, dateEnd, zoom, deviceId }) => dht.getDhtList({ dateStart, dateEnd, zoom, deviceId }),
-  dht:  async ({ key, temperature, humidity }, context) => dht.insertDhtByKey({ key, temperature, humidity }),
-  getDevice: async({ deviceId }) => device.getDevice({ deviceId }),
-  pir:  async ({ key, state }, context) => pir.insertPirByKey({ key, state }),
-  light:  async ({ key, level }, context) => light.insertLightByKey({ key, level }),
-  switch:  async ({ key, state }, context) => switchstate.insertSwitchByKey({ key, state }),
+  getDevice: async({ deviceId }) => device.getDevice({ deviceId }),  
+  sensorValue: async({ key, sensorType, value }) => sensors.insertSensorValueByKey({ key, sensorType, value }),
+
+  controllerCall: async({ key, controller, action }) => {
+    console.log('controllerCall');
+    console.log('-----------ip: ' + key);
+    console.log('---controller: ' + controller);
+    console.log('-------action: ' + action);
+    return await controllers.setControllerState({ key, controller, action });
+  },
+  
   getConfig: async({ key }, context) => {
     return [
       {

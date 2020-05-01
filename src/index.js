@@ -7,6 +7,8 @@ const config = require("./config");
 
 const initDb = require("./db").initDb;
 initDb(() => {});
+const db = require("./db").getDb();
+console.log(db);
 
 const app = express();
 const cors = require('cors');

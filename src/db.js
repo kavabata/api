@@ -7,7 +7,6 @@ const initDb = (callback) => {
       console.warn("Trying to init DB again!");
       return callback(null, _db);
   }
-
   let db = mysql.createConnection(config.db);
   
   db.connect((err) =>{
@@ -23,7 +22,6 @@ const initDb = (callback) => {
 }
 
 const getDb = () => {
-  // assert.ok(_db, "init first");
   return _db;
 }
 

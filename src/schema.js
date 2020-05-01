@@ -31,6 +31,10 @@ const schema = buildSchema(`
     pir(key: String!, state: String): String!
     light(key: String!, level: String): String!
     switch(key: String!, state: String): String!
+
+    sensorValue(key: String!, sensorType: String!, value: String!): String!
+    
+    controllerCall(key: String!, controller: String!, action: String!): String!
   }
 `);
 

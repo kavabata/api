@@ -1,2 +1,4 @@
 .env
+.bash_profile
+package-lock.json
 node_modules/*
