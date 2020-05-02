@@ -35,6 +35,7 @@ const schema = buildSchema(`
     sensorValue(key: String!, sensorType: String!, value: String!): String!
     
     controllerCall(key: String!, controller: String!, action: String!): String!
+    fireController(key: String!, controller: String!, action: String!): String!
   }
 `);
 

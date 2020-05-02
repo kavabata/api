@@ -18,6 +18,28 @@ module.exports = {
 
   //   return promise;
   // },
+  getConfig: async (key) => {
+    const getDb = require("../db").getDb;
+    const db = getDb();
+    let config = [];
+
+    const device = await module.exports.getDeviceByKey(key);
+    
+    if(!device) {
+      return config;
+    }
+    // console.log(device);
+    const { ip, device_id: deviceId } = device;
+    config.push({ key: 'ip_address', value: ip });
+
+    const sensors = await require('./sensors').getSensorsByDeviceId(deviceId);
+    // console.log(sensors);
+    sensors.forEach(({ type, sensor_delay: sensorDelay }) => {
+      config.push({ key: `${type}_delay`, value: sensorDelay });
+    })
+
+    return config;
+  },
   getDeviceByKey: (key) => {
     const getDb = require("../db").getDb;
     const db = getDb();

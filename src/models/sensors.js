@@ -34,7 +34,7 @@ module.exports = {
         sensor_id as sensorId,
         value as value, 
         created
-      FROM sensors_states
+      FROM sensors_logs
       WHERE 1
         ${dateRange}
         ${deviceCond}
@@ -51,6 +51,21 @@ module.exports = {
 
       return promise;
       
+  },
+  getSensorsByDeviceId: async(deviceId) => {
+    const getDb = require("../db").getDb;
+    const db = getDb();
+
+    const query = `
+      SELECT * FROM sensors
+      WHERE device_id = ${db.escape(deviceId)}
+    `;
+    
+    let promise = new Promise((resolve, reject) => {
+      db.query(query, (e, r) => resolve(r));
+    });
+
+    return promise;
   },
   getSensorsState: async ({ roomId }) => {
     const getDb = require("../db").getDb;
@@ -114,7 +129,7 @@ module.exports = {
 
     return resultId;
   },
-  insertSensorValue: ({ deviceId, sensorId, roomId, value  }) => {
+  insertSensorValue: async ({ deviceId, sensorId, roomId, value  }) => {
     const getDb = require("../db").getDb;
     const db = getDb();
 
@@ -138,6 +153,25 @@ module.exports = {
           resolve(insertId);
         })
       })
+    });
+
+    return promise;
+  },
+  insertTimeSensorValue: async () => {
+    const getDb = require("../db").getDb;
+    const db = getDb();
+    const dateTime = moment().diff(moment().startOf('day'), 'seconds');
+
+    const update = `
+    INSERT INTO sensors_states (device_id, sensor_id, room_id, value, updated) VALUES 
+    (1, 1, 1, ${db.escape(dateTime)}, NOW() ON DUPLICATE KEY UPDATE value=Values(value)
+    `;
+
+    let promise = new Promise((resolve, reject) => {
+      db.query(update, (e) => { 
+        console.log(update);
+        resolve('1');
+      });
     });
 
     return promise;

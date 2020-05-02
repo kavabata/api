@@ -8,7 +8,10 @@ const config = require("./config");
 const initDb = require("./db").initDb;
 initDb(() => {});
 const db = require("./db").getDb();
-console.log(db);
+
+var CronJob = require('cron').CronJob;
+var timeSensor = new CronJob('*/10 * * * * *', () => require('./models/sensors').insertTimeSensorValue(), null, true, 'America/Los_Angeles');
+timeSensor.start();
 
 const app = express();
 const cors = require('cors');
@@ -23,5 +26,6 @@ app.use(
   })
 );
 app.listen(config.app.port);
+
 
 console.log(`🚀 Server ready at http://localhost:${config.app.port}/graphql`);

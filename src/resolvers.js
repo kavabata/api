@@ -10,19 +10,12 @@ const resolvers = {
   avgTemperature: () => {
     return '36.6';
   },
+  getConfig: async({ key }, context) => device.getConfig(key),
+  getDevice: async({ deviceId }) => device.getDevice({ deviceId }),
 
-  getDevice: async({ deviceId }) => device.getDevice({ deviceId }),  
   sensorValue: async({ key, sensorType, value }) => sensors.insertSensorValueByKey({ key, sensorType, value }),
   controllerCall: async({ key, controller, action }) => controllers.setControllerState({ key, controller, action }),
-  
-  getConfig: async({ key }, context) => {
-    return [
-      {
-        key: 'test',
-        value: 'var'
-      }
-    ]
-  }
+  fireController: async({ key, controller, action, delay = 0 }) => controllers.fireController({ key, controller, action, delay })
 };
 
 module.exports = resolvers;
