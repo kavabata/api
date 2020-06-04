@@ -9,9 +9,9 @@ const initDb = require("./db").initDb;
 initDb(() => {});
 const db = require("./db").getDb();
 
-var CronJob = require('cron').CronJob;
-var timeSensor = new CronJob('*/10 * * * * *', () => require('./models/sensors').insertTimeSensorValue(), null, true, 'America/Los_Angeles');
-timeSensor.start();
+// var CronJob = require('cron').CronJob;
+// var _timeSensor = new CronJob('*/10 * * * * *', () => require('./models/sensors').insertTimeSensorValue(), null, true, 'America/Los_Angeles');
+// timeSensor.start();
 
 const app = express();
 const cors = require('cors');
