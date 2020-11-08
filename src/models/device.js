@@ -32,7 +32,7 @@ module.exports = {
     const { ip, device_id: deviceId } = device;
     config.push({ key: 'ip_address', value: ip });
 
-    const sensors = await require('./sensors').getSensorsByDeviceId(deviceId);
+    const sensors = await require('../sensors').getSensorsByDeviceId(deviceId);
     // console.log(sensors);
     sensors.forEach(({ type, sensor_delay: sensorDelay }) => {
       config.push({ key: `${type}_delay`, value: sensorDelay });

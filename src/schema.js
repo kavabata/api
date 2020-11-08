@@ -1,8 +1,8 @@
 
-const { buildSchema } = require("graphql");
+import { buildSchema } from 'graphql';
 
 // Construct a schema, using GraphQL schema language
-const schema = buildSchema(`
+export const schema = buildSchema(`
   type DhtGraph {
     deviceId: String
     temperature: String
@@ -38,5 +38,4 @@ const schema = buildSchema(`
     fireController(key: String!, controller: String!, action: String!): String!
   }
 `);
-
-module.exports = schema;
+export default schema;

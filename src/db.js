@@ -1,31 +1,9 @@
-const config = require('./config');
-let mysql = require('mysql');
-let _db;
+import config from './config';
+import knex from 'knex';
 
-const initDb = (callback) => {
-  if (_db) {
-      console.warn("Trying to init DB again!");
-      return callback(null, _db);
-  }
-  let db = mysql.createConnection(config.db);
-  
-  db.connect((err) =>{
-    if (err) {
-        return callback(err);
-    }
-    
-    console.log("DB initialized - connected to: PI");
+const db = knex({
+  client: "mysql",
+  connection: config.db
+});
 
-    _db = db;
-    return callback(null, _db);
-  });
-}
-
-const getDb = () => {
-  return _db;
-}
-
-module.exports = {
-  getDb,
-  initDb
-};
+export default db;

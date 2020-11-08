@@ -1,17 +1,18 @@
-// config.js
-const env = process.env.NODE_ENV; // 'dev' or 'test'
+import { config } from 'dotenv';
+const env = process.env.NODE_ENV;
+const { parsed: dotenv } = config();
 
-const config = {
+const c = {
  app: {
    port: 7000
  },
  db: {
-   host: process.env.MYSQL_HOST,
-   port: process.env.MYSQL_PORT,
-   user: process.env.MYSQL_USER,
-   password: process.env.MYSQL_PASSWORD,
-   database: process.env.MYSQL_DB
+   host: dotenv.MYSQL_HOSTNAME,
+   port: dotenv.MYSQL_PORT,
+   user: dotenv.MYSQL_USERNAME,
+   password: dotenv.MYSQL_PASSWORD,
+   database: dotenv.MYSQL_DATABASE
  }
 };
 
-module.exports = config;
+export default c;

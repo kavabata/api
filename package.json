@@ -2,26 +2,37 @@
   "name": "api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "nodemon src/index.js",
-    "start": "nodemon src/index.js"
+    "test": "test/index.js",
+    "start": "nodemon --exec babel-node src/index.js"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kavabata/api.git"
+  },
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kavabata/api/issues"
+  },
+  "homepage": "https://github.com/kavabata/api#readme",
   "dependencies": {
+    "@babel/core": "^7.12.3",
+    "@babel/node": "^7.12.6",
+    "@babel/preset-env": "^7.12.1",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "cron": "^1.8.2",
     "express": "^4.17.1",
-    "express-graphql": "^0.9.0",
-    "graphql": "^15.0.0",
-    "knex": "^0.21.0",
-    "lodash": "^4.17.15",
-    "moment": "^2.24.0",
-    "mongodb-memory-server": "^6.5.2",
+    "express-graphql": "^0.11.0",
+    "graphql": "^15.4.0",
+    "knex": "^0.21.12",
+    "lodash": "^4.17.20",
+    "moment": "^2.29.1",
     "mysql": "^2.18.1",
-    "react-vis": "^1.11.7"
+    "sleep": "^6.3.0",
+    "webpack": "^5.4.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"
