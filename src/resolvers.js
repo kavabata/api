@@ -1,7 +1,5 @@
-// var device = require('./models/device');
-// var sensors = require('./models/sensors');
-// var controllers = require('./models/controllers');
-import sensors from './sensors';
+import { insertSensorValueByKey, insertControllerValueByKey } from './sensors';
+import { saveDeviceConfig } from './devices';
 
 const resolvers = {
   hello: () => "Hello world!",
@@ -10,8 +8,9 @@ const resolvers = {
   },
   // getConfig: async({ key }, context) => device.getConfig(key),
   // getDevice: async({ deviceId }) => device.getDevice({ deviceId }),
-
-  sensorValue: sensors.insertSensorValueByKey
+  configValue: saveDeviceConfig,
+  sensorValue: insertSensorValueByKey,
+  controllerCall: insertControllerValueByKey
   // controllerCall: async({ key, controller, action }) => controllers.setControllerState({ key, controller, action }),
   // fireController: async({ key, controller, action, delay = 0 }) => controllers.fireController({ key, controller, action, delay })
 };

@@ -153,6 +153,26 @@ export const insertSensorValueByKey = async ({ key, sensorType, value }) =>
       return 'true';
     });
 
+export const insertControllerValueByKey = async ({ key, controller, value }) => 
+  db({ d: 'devices'})
+    .join({ c: 'controllers' }, 'c.device_id', 'd.id')
+    .select('c.*')
+    .where({ 'd.key': key })
+    .where({ 'c.controller': controller })
+    .first()
+    .then((c) => {
+      console.log(c);
+      db('controllers')
+        .where({ id: c.id })
+        .update('controller_state', value)
+        .update('updated', db.fn.now())
+        .then((resp) => {
+          console.log('controller state updated', key, controller, value);
+        });
+      // console.log('Close request')
+      return 'true';
+    });
+
 export const insertTimeSensorValue = async () => 
   db('sensors')
     .where({ 'sensor_type': 'time' })

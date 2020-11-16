@@ -32,9 +32,10 @@ export const schema = buildSchema(`
     light(key: String!, level: String): String!
     switch(key: String!, state: String): String!
 
+    configValue(key: String!, name: String!, value: String!): String!
     sensorValue(key: String!, sensorType: String!, value: String!): String!
     
-    controllerCall(key: String!, controller: String!, action: String!): String!
+    controllerCall(key: String!, controller: String!, value: String!): String!
     fireController(key: String!, controller: String!, action: String!): String!
   }
 `);
