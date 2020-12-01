@@ -11,9 +11,9 @@ import { getScenario } from './scenarios';
 
 export const sensorTrigger = async ({ id, sensor_type }) => {
   
-  console.log('sensorTrigger:', id, sensor_type);
+  // console.log('sensorTrigger:', id, sensor_type);
   const scenarios = await getScenario(id);    
-  console.log('scenariosAffected', scenarios);
+  // console.log('scenariosAffected', scenarios);
  
   scenarios.map(({ id, value, delay }) => {
     db({ c: 'controllers' })
@@ -25,26 +25,11 @@ export const sensorTrigger = async ({ id, sensor_type }) => {
         const controllerOptions = {
           host: ip,
           method: 'GET',
-          path: `/set:${controller}/value:${value}/delay:${delay}`
+          path: `/${controller}/${value}/${delay}`
         }
 
-        console.log('setControllerState', controllerOptions);
-
-        const req = http
-          .request(controllerOptions, (res) => {
-            console.log('controllerResponce', res);
-
-            res.on('data', (r) => console.log('requestData', r));
-            res.on('end', (r) => console.log('requestEnd', r));
-            
-            db('controllers')
-              .where({ id })
-              .update('controller_state', value)
-              .update('updated', db.fn.now())
-              .then((resp) => resp)
-          });
-          
-          req.on('error', (r) => console.log('requestError', r))
+        
+        http.get(controllerOptions, (_res) => { console.log('setControllerState', controllerOptions); });
 
       });
   })
