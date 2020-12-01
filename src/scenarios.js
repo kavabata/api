@@ -42,8 +42,9 @@ const filterRule = ({ sensor_type, sensor_start, sensor_end, sensor_state }) => 
   if (sensor_type === 'temperature' || sensor_type === 'humidity' || sensor_type === 'lightlevel') {
     return parseFloat(sensor_state) >= sensor_start && parseFloat(sensor_state) <= sensor_end;
   } else if (sensor_type === 'pir') {
-    const passedSeconds = moment().unix() - parseInt(sensor_state);
-    return passedSeconds >= sensor_start && passedSeconds <= sensors_end;
+    const mo = moment.duration(moment(moment.now()).diff(moment(sensor_state))).asSeconds();
+    const passedSeconds = mo - 18000; // difference 
+    return passedSeconds >= sensor_start && passedSeconds <= sensor_end;
   }
   return true;
 };

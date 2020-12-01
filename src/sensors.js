@@ -4,6 +4,8 @@ import db from './db';
 import knex from 'knex';
 import resolvers from './resolvers';
 import { sensorTrigger } from './trigger';
+import http from 'http';
+
 
 export const getSensorList = ({ dateStart, dateEnd, zoom, sensorId }, callback = ()=>{} ) => {
   let zoomGroup = `GROUP BY created`;
@@ -124,7 +126,7 @@ export const insertSensorValueByKey = async ({ key, sensorType, value }) =>
       let sensor_state = value;
       if (sensor.sensor_type === 'pir') {
         if (parseInt(value, 10)) {
-          sensor_state = moment().unix();
+          sensor_state = db.fn.now();
         } else {
           sensor_state = sensor.sensor_state;
         }
@@ -145,11 +147,11 @@ export const insertSensorValueByKey = async ({ key, sensorType, value }) =>
         .update('sensor_state', sensor_state)
         .update('sensor_updated', db.fn.now())
         .then((resp) => {
-          console.log('pre sensorTrigger ')
+          console.log(`Device: [${sensor.device_id}] Sensor: [${sensor.sensor_type}-${sensor.id}]  State: ${sensor_state} {${value}}`)
           sensorTrigger(sensor);
         });
 
-      console.log('Close request')
+      // console.log('Close request')
       return 'true';
     });
 
@@ -178,7 +180,12 @@ export const insertTimeSensorValue = async () =>
     .where({ 'sensor_type': 'time' })
     .update('sensor_updated', db.fn.now())
     .update('sensor_state', moment().diff(moment().startOf('day'), 'seconds'))
-    .then((resp) => resp);
+    .then((resp) => {
+      sensorTrigger({
+        id: 1,
+        sensor_type: 'time'
+      });
+    });
 
 
 export default {
